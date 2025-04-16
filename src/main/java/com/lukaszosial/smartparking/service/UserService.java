@@ -11,26 +11,30 @@ import com.lukaszosial.smartparking.repository.UserRepository;
 
 @Service
 public class UserService {
-	
+
 	@Autowired
 	UserRepository userRepository;
-	
-	public List<User> getAllUsers() {
+
+	public List<User> getUsers() {
 		return userRepository.findAll();
 	}
-	
-	public Optional<User> findUserById(Integer userId) {
+
+	public Optional<User> getUserById(Integer userId) {
 		return userRepository.findById(userId);
 	}
-	
+
 	public void addUser(User user) {
 		userRepository.save(user);
 	}
-	
+
 	public void updateUser(User user) {
-		userRepository.save(user);
+		if (userRepository.existsById(user.getId())) {
+			userRepository.save(user);
+		} else {
+			throw new RuntimeException("User with id: " + user.getId() + " not found");
+		}
 	}
-	
+
 	public void deleteUser(Integer userId) {
 		userRepository.deleteById(userId);
 	}
